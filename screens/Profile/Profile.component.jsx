@@ -3,7 +3,8 @@ import React, { useRef } from 'react'
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
- 
+import { InfoContainer, Header, AccountImage } from '../Profile/Profile.style'
+
 export default function ProfileComponent() {
   const renderContent = () => (
     <View
@@ -16,9 +17,9 @@ export default function ProfileComponent() {
       <Text>Swipe down to close</Text>
     </View>
   );
- 
+
   const sheetRef = React.useRef(null);
- 
+
   return (
     <>
       <View
@@ -29,10 +30,12 @@ export default function ProfileComponent() {
           justifyContent: 'center',
         }}
       >
-        <Button
-          title="Open Bottom Sheet"
-          onPress={() => sheetRef.current.snapTo(0)}
-        />
+        <InfoContainer>
+          <Header>Leticia Guadalupe Moreno </Header>
+          <AccountImage source={{ uri: "https://i.postimg.cc/fbsPPxLD/yo.jpg" }} />
+          <Header> leticiagpemoreno@gmail.com </Header>
+        </InfoContainer>
+
       </View>
       <BottomSheet
         ref={sheetRef}

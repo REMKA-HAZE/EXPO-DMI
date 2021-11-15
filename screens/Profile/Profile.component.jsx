@@ -1,45 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useRef } from 'react'
-import { StyleSheet, Text, View, Button } from 'react-native';
-import Animated from 'react-native-reanimated';
-import BottomSheet from 'reanimated-bottom-sheet';
- 
-export default function ProfileComponent() {
-  const renderContent = () => (
-    <View
-      style={{
-        backgroundColor: 'white',
-        padding: 16,
-        height: 450,
-      }}
-    >
-      <Text>Swipe down to close</Text>
-    </View>
-  );
- 
-  const sheetRef = React.useRef(null);
- 
+import React, { useRef, useState } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native';
+import { Modalize } from 'react-native-modalize';
+
+const ProfileComponent = () => {
+  const modalizeRef = useRef(null);
+
+  const onOpen = () => {
+    modalizeRef.current?.open();
+  };
+
   return (
     <>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'papayawhip',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Button
-          title="Open Bottom Sheet"
-          onPress={() => sheetRef.current.snapTo(0)}
-        />
-      </View>
-      {/* <BottomSheet
-        ref={sheetRef}
-        snapPoints={[450, 300, 0]}
-        borderRadius={10}
-        renderContent={renderContent}
-      /> */}
+      <TouchableOpacity onPress={onOpen}>
+        <Text>Open the modal</Text>
+      </TouchableOpacity>
+
+      <Modalize ref={modalizeRef}><Text>Hola</Text></Modalize>
     </>
   );
-}
+};
+
+export default ProfileComponent

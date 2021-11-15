@@ -97,7 +97,9 @@ const Home = ({ user }) => {
   }
 
   useEffect(() => {
-    db.collection('tasks').onSnapshot(queryOnSnapshot => {
+   ((async ()=> {
+     try {
+       await db.collection('tasks').onSnapshot(queryOnSnapshot => {
       const tasks = queryOnSnapshot.docs.map(task => ({
         id: task.id,
         ...task.data()
@@ -107,6 +109,16 @@ const Home = ({ user }) => {
 
       setTasks(tasks);
     })
+     } catch (error) {
+        console.error(error);
+      Toast.show("An error has ocurred!", {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+      containerStyle: { marginTop: 50 },
+    });
+     }
+     
+   }) ())
 
   }, [])
 

@@ -34,12 +34,12 @@ export default function ProfileComponent() {
           onPress={() => sheetRef.current.snapTo(0)}
         />
       </View>
-      <BottomSheet
+      {/* <BottomSheet
         ref={sheetRef}
         snapPoints={[450, 300, 0]}
         borderRadius={10}
         renderContent={renderContent}
-      />
+      /> */}
     </>
   );
 }

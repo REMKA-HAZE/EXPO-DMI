@@ -26,7 +26,7 @@ const AccountImage = styled.Image`
 const LogoutButton = styled.TouchableOpacity`
     margin-top: 5%;
     align-items: center;
-    background-color: ${colors.secundary} ;
+    background-color: ${colors.success};
     margin-right: 20px;
     margin-left: 20px;
     border-radius: 15px;
@@ -35,7 +35,7 @@ const LogoutButton = styled.TouchableOpacity`
 `
 const TextButton = styled.Text`
     align-self: center;
-    color: black;
+    color: white;
     font-size: 20px;
     font-weight: bold;
 `;

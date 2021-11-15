@@ -1,21 +1,20 @@
 import React from 'react'
 import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "../screens/Home/Home.screen"
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { StatusBar } from 'expo-status-bar';
+import { colors } from '../styles/colors.styles';
 
 const Tab = createBottomTabNavigator();
 
-export const TabsComponent = () => {
+export const TabsComponent = ({ user }) => {
     return (
-        <NavigationContainer>
+        <>
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
 
-                        if (route.name === "Home") {
+                        if (route.name === "HomeScreen") {
                             iconName = focused
                                 ? "list-circle"
                                 : "list-circle-outline";
@@ -26,11 +25,21 @@ export const TabsComponent = () => {
                     tabBarInactiveTintColor: "grey",
                 })}
             >
-                <Tab.Screen name="Home" options={{
-                    title: 'My tasks'
-                }} component={HomeScreen} />
+                <Tab.Screen name="HomeScreen" options={{
+                    title: 'My tasks',
+                    headerStyle: {
+                        backgroundColor: colors.primary
+                    },
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    tabBarActiveTintColor: colors.primary
+                }}  >
+                    {() => <HomeScreen user={user} />}
+                </Tab.Screen>
+
             </Tab.Navigator>
-            <StatusBar style='auto' />
-        </NavigationContainer>
+        </>
     )
+
 }

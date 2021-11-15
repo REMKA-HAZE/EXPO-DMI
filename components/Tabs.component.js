@@ -3,6 +3,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "../screens/Home/Home.screen"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from '../styles/colors.styles';
+import ProfileComponent from '../screens/Profile/Profile.component';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,6 +19,11 @@ export const TabsComponent = ({ user }) => {
                             iconName = focused
                                 ? "list-circle"
                                 : "list-circle-outline";
+                        }
+                        if (route.name === "My profile") {
+                            iconName = focused
+                                ? "person-circle"
+                                : "person-circle-outline";
                         }
                         return <Ionicons name={iconName} size={size} color={color} />;
                     },
@@ -36,6 +42,18 @@ export const TabsComponent = ({ user }) => {
                     tabBarActiveTintColor: colors.primary
                 }}  >
                     {() => <HomeScreen user={user} />}
+                </Tab.Screen>
+                <Tab.Screen name="My profile" options={{
+                    title: 'My profile',
+                    headerStyle: {
+                        backgroundColor: colors.secundary
+                    },
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    tabBarActiveTintColor: colors.secundary
+                }}  >
+                    {() => <ProfileComponent user={user} />}
                 </Tab.Screen>
 
             </Tab.Navigator>

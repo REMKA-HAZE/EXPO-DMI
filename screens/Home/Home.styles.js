@@ -2,8 +2,8 @@ import { Dimensions } from "react-native";
 import styled from "styled-components/native";
 import { colors } from "../../styles/colors.styles";
 
-let width = Dimensions.get('window').width - 20;
-
+let width = (Dimensions.get('window').width - 20);
+console.log(width);
 const Container = styled.SafeAreaView`
     flex: 1;
     align-items: center;
@@ -17,7 +17,7 @@ const Card = styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: ${width};
+    width: ${Math.round(width)}px;
     border-radius: 15px;
     background-color: ${colors.white} ;
     padding: 0;

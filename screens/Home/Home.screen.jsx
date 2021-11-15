@@ -26,12 +26,12 @@ const Home = ({ user }) => {
   const saveTask = async (e) => {
     e.preventDefault();
 
-    const newTask = await db.collection('tasks').add({
+    try {
+      const newTask = await db.collection('tasks').add({
       task: inputValue,
       completed: false,
       idUser: user.uid
     })
-    console.log(newTask)
     Keyboard.dismiss();
 
     setInputValue("");
@@ -41,22 +41,41 @@ const Home = ({ user }) => {
       position: Toast.positions.TOP,
       containerStyle: { marginTop: 50 },
     });
-  };
+    } catch (error) {
+      console.error(error);
+      Toast.show("An error has ocurred!", {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+      containerStyle: { marginTop: 50 },
+    });
+    }
+  }
 
   const deleteTask = async (e, id) => {
     e.preventDefault();
-    const deletedTask = await db.collection('tasks').doc(id).delete();
+    try {
+      await db.collection('tasks').doc(id).delete();
 
     Toast.show("Task deleted!", {
       duration: Toast.durations.SHORT,
       position: Toast.positions.TOP,
       containerStyle: { marginTop: 50 },
     });
+    } catch (error) {
+       console.error(error);
+      Toast.show("An error has ocurred!", {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+      containerStyle: { marginTop: 50 },
+    });
+    }
+    
   }
 
   const statusTask = async (e, task, estatus) => {
     e.preventDefault();
-    const updated = await db.collection('tasks').doc(task.id).set({
+    try {
+       await db.collection('tasks').doc(task.id).set({
       task: task.task,
       completed: estatus,
       idUser: task.idUser
@@ -66,6 +85,15 @@ const Home = ({ user }) => {
       position: Toast.positions.TOP,
       containerStyle: { marginTop: 50 },
     });
+    } catch (error) {
+       console.error(error);
+      Toast.show("An error has ocurred!", {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+      containerStyle: { marginTop: 50 },
+    });
+    }
+   
   }
 
   useEffect(() => {
@@ -78,7 +106,6 @@ const Home = ({ user }) => {
       tasks.filter(task => task.idUser === user.uid);
 
       setTasks(tasks);
-      console.log(tasks)
     })
 
   }, [])

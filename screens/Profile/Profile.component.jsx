@@ -3,7 +3,10 @@ import React, { useRef } from 'react'
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { InfoContainer, Header, AccountImage } from '../Profile/Profile.style'
+import { Ionicons } from "@expo/vector-icons";
+import { InfoContainer, Header, AccountImage, LogoutButton, TextButton } from '../Profile/Profile.style';
+import { auth } from "../../firebase";
+import { colors } from "../../styles/colors.styles";
 
 export default function ProfileComponent() {
   const renderContent = () => (
@@ -21,28 +24,15 @@ export default function ProfileComponent() {
   const sheetRef = React.useRef(null);
 
   return (
-    <>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'papayawhip',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <InfoContainer>
-          <Header>Leticia Guadalupe Moreno </Header>
-          <AccountImage source={{ uri: "https://i.postimg.cc/fbsPPxLD/yo.jpg" }} />
-          <Header> leticiagpemoreno@gmail.com </Header>
-        </InfoContainer>
 
-      </View>
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={[450, 300, 0]}
-        borderRadius={10}
-        renderContent={renderContent}
-      />
-    </>
+    <InfoContainer>
+      <AccountImage source={{ uri: "https://i.postimg.cc/fbsPPxLD/yo.jpg" }} />
+      <Header> {auth.currentUser?.email} </Header>
+      <LogoutButton>
+        <TextButton>Sign out</TextButton>
+      </LogoutButton>
+    </InfoContainer>
+
+
   );
 }

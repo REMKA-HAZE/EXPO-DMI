@@ -5,16 +5,24 @@ import { useNavigation } from "@react-navigation/core";
 import { View,
 KeyboardAvoidingView,
   StyleSheet,
-
+Image,
   TextInput,
 
   Platform
    } from 'react-native';
 import { auth,db } from "../../firebase";
 import PressableButton from "./Button";
+import { AccountImage } from "../Profile/Profile.style";
+import styled from "styled-components";
 
 
-
+const LogoImage = styled.Image`
+  width: 200px;
+  height: 200px;
+  align-self: center;
+  border-radius: 50px;
+  bottom: 10%;
+`
 export const Registro = () =>{
    const [email, setEmail] = useState("");
    const [pwd, setPwd] = useState("");
@@ -52,12 +60,11 @@ export const Registro = () =>{
 
  return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{flex:1, alignItems:"center", justifyContent:"center"}}>
-
-
-      <View>
+      style={{flex:1, alignItems:"center", justifyContent: "center"}}>
     
-
+      <LogoImage source={{uri: 'https://i.ibb.co/Fz555Jq/logo.png'}}/>
+      {/* <LogoImage source={{uri: 'https://i.ibb.co/MVmD8PY/logo2.png'}}/> */}
+      <View>
         <TextInput
           placeholder="Full name"
           value={name}

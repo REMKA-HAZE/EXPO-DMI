@@ -23,6 +23,14 @@ const AccountImage = styled.Image`
     align-self: center;
     margin: 20px;
 `
+const ImagePressable = styled.TouchableOpacity`
+    height: 200px;
+    width: 200px;
+    border-radius: 200px;
+    align-items: center;
+    align-self: center;
+    margin: 20px;
+`
 const LogoutButton = styled.TouchableOpacity`
     margin-top: 5%;
     align-items: center;
@@ -50,4 +58,4 @@ const DrawerButton = styled.TouchableOpacity`
 `
 
 
-export { StyledView, Header, InfoContainer, AccountImage, LogoutButton, TextButton, DrawerText, DrawerButton }
+export { StyledView, Header, InfoContainer, AccountImage, LogoutButton, TextButton, DrawerText, DrawerButton, ImagePressable }

@@ -9,7 +9,15 @@ import {
 } from 'react-native';
 import { auth, db } from "../../firebase";
 import PressableButton from "../Registro/Button";
+import styled from "styled-components";
 
+const LogoImage = styled.Image`
+  width: 200px;
+  height: 200px;
+  align-self: center;
+  border-radius: 50px;
+  bottom: 10%;
+`
 export const Login = ({ setUser }) => {
 
   const [email, setEmail] = useState("");
@@ -53,7 +61,8 @@ export const Login = ({ setUser }) => {
   };
   return (
     <KeyboardAvoidingView style={{flex:1, alignItems:"center", justifyContent:"center"}} behavior={Platform.OS === "ios" ? "padding" : "height"}>
-      <View>
+      <LogoImage source={{uri: 'https://i.ibb.co/Fz555Jq/logo.png'}}/>
+     <View>
         
        <TextInput
           placeholder="Email"

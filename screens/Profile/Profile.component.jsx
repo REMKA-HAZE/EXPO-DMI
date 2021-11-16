@@ -1,20 +1,21 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { useNavigation } from "@react-navigation/core";
-import { InfoContainer, Header, AccountImage, LogoutButton, TextButton, DrawerText, DrawerButton } from '../Profile/Profile.style';
+import { ImagePressable, InfoContainer, Header, AccountImage, LogoutButton, TextButton, DrawerText, DrawerButton } from '../Profile/Profile.style';
 import { auth, db, storage} from "../../firebase";
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-root-toast';
+import { ActivityIndicator } from 'react-native-paper';
 
 const ProfileComponent = ({user}) =>  {
  const modalizeRef = useRef(null);
    const navigation = useNavigation();
    const [userImage, setUserImage] = useState('')
-  const [image, setImage] = useState('')
-
+   const [userImageId, setUserImageId] = useState('')
+   const [name, setName] = useState('')
+  const [uploading, setUploading] = useState(true);
   const handleSignOut = () => {
     auth
       .signOut()
@@ -35,11 +36,15 @@ const ProfileComponent = ({user}) =>  {
         }
       }
     })();
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
   }, []);
-
-  useEffect(() => {
-    downloadImage(image)
-  }, [image])
   const pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -93,6 +98,8 @@ const ProfileComponent = ({user}) =>  {
   }
   const uploadImage = async (imageName,uploadUri) => {
     try {
+      setUploading(true);
+    modalizeRef.current?.close()
       const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -108,26 +115,13 @@ const ProfileComponent = ({user}) =>  {
     });
         
      await storage.child(imageName).put(blob).then((result) => {
-       Toast.show("Uploaded image correctly!", {
-       duration: Toast.durations.SHORT,
-       position: Toast.positions.TOP,
-       containerStyle: { marginTop: 50 },
-     });
-     setImage(imageName);
-          
-      // db.collection('userImage').doc().set({
-      // task: inputValue,
-      // completed: false,
-      // idUser: user.uid
-      // }).then((resp) => {
-      // }).catch((error) => {
-      //     console.log(error);
-      //     Toast.show("An error has ocurred!", {
-      //   duration: Toast.durations.SHORT,
-      //   position: Toast.positions.TOP,
-      //   containerStyle: { marginTop: 50 },
-      //   });
-      //   })
+            Toast.show("Uploaded image correctly!", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.TOP,
+            containerStyle: { marginTop: 50 },
+          });
+
+            downloadImage(imageName)
         }).catch((error) => {
           console.log(error);
           Toast.show("An error has ocurred!", {
@@ -147,27 +141,51 @@ const ProfileComponent = ({user}) =>  {
 }
   const downloadImage = async (imageName) => {
     console.log(imageName);
-    storage.child(imageName).getDownloadURL().then((url) => {
+    if(imageName){
+      storage.child(imageName).getDownloadURL().then(async (url) => {
       console.log(url);
       setUserImage(url)
+      setUploading(false);
+        await db.collection('userImages').doc(userImageId).set({
+      uri: url,
+      idUser: user.uid
+      }).catch(err => {
+        console.log(err)
+      });
     }).catch((err) => {
       console.log(err);
+      Toast.show("An error has ocurred!", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+        });
     });
+    } else {
+     Toast.show("Not found image name!", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+        });
+    }
   }
 
    useEffect(() => {
-     console.log(user.uid);
    ((async ()=> {
      try {
        await db.collection('userImages').where("idUser", "==", user.uid).get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
+        querySnapshot.docs.forEach((doc) => {
             setUserImage(doc.data()?.uri)
-            console.log(doc)
-        });
-
+            setUserImageId(doc.id)
+            setUploading(false)
+        }); 
     }).catch((err) => {
       console.log(err)
     })
+    await db.collection('person').where("idUser", "==", user.uid).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            setName(doc.data()?.fullName)
+        });
+      });
      } catch (error) {
         console.error(error);
       Toast.show("An error has ocurred!", {
@@ -184,9 +202,10 @@ const ProfileComponent = ({user}) =>  {
   return (
 
     <InfoContainer>
-      <TouchableOpacity onPress={() => modalizeRef.current?.open()}>
-        <AccountImage source={{ uri: userImage? userImage : "https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg"}} />
-      </TouchableOpacity>
+      <ImagePressable onPress={() => modalizeRef.current?.open()}>
+        { uploading ? <ActivityIndicator size='large' /> : <AccountImage source={{ uri: userImage? userImage : "https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg"}} />}
+        </ImagePressable>
+      <Header> {name} </Header>
       <Header> {auth.currentUser?.email} </Header>
       <LogoutButton onPress={handleSignOut}>
         <TextButton>Sign out</TextButton>

@@ -41,7 +41,6 @@ const Home = ({ user }) => {
       position: Toast.positions.TOP,
       containerStyle: { marginTop: 50 },
     });
-    getTasks()
     } catch (error) {
       console.error(error);
       Toast.show("An error has ocurred!", {
@@ -62,7 +61,6 @@ const Home = ({ user }) => {
       position: Toast.positions.TOP,
       containerStyle: { marginTop: 50 },
     });
-    getTasks()
     } catch (error) {
        console.error(error);
       Toast.show("An error has ocurred!", {
@@ -87,7 +85,6 @@ const Home = ({ user }) => {
       position: Toast.positions.TOP,
       containerStyle: { marginTop: 50 },
     });
-    getTasks()
 
     } catch (error) {
        console.error(error);
@@ -102,13 +99,14 @@ const Home = ({ user }) => {
 
   const getTasks =  async ()=> {
      try {
-       await db.collection('tasks').where("idUser", "==", user.uid).get().then(queryOnSnapshot => {
+       await db.collection('tasks').onSnapshot(queryOnSnapshot => {
       const tasks = queryOnSnapshot.docs.map(task => ({
         id: task.id,
         ...task.data()
       }));
+      const tasksFiltered=  tasks.filter(task => task.idUser === user.uid);
 
-      setTasks(tasks);
+      setTasks(tasksFiltered);
     })
      } catch (error) {
         console.error(error);

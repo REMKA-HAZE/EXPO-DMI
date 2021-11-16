@@ -1,3 +1,5 @@
+import { StyleSheet, Text, View } from 'react-native';
+import ProfileComponent from './screens/Profile/Profile.component';
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';

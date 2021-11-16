@@ -54,7 +54,7 @@ const Home = ({ user }) => {
   const deleteTask = async (e, id) => {
     e.preventDefault();
     try {
-      await db.collection('tasks').doc(id).delete();
+    await db.collection('tasks').doc(id).delete();
 
     Toast.show("Task deleted!", {
       duration: Toast.durations.SHORT,

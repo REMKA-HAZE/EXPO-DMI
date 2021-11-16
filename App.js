@@ -12,7 +12,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Login'>
       <Stack.Screen name="Login" component={Login} options={{ headerShown:false }} />
-      <Stack.Screen name="Registro" component={Registro} options={{ headerShown:false }} />
+      <Stack.Screen name="Registro" component={Registro} options={{headerTitle:'User Register',headerTintColor:'darkorange'}} />
       <Stack.Screen name="Home">
         {(props) => <Home {...props} />}
         </Stack.Screen>

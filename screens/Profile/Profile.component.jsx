@@ -10,9 +10,10 @@ import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-root-toast';
 
 const ProfileComponent = ({user}) =>  {
+  alert(user.uid)
  const modalizeRef = useRef(null);
    const navigation = useNavigation();
-   const [userImage, setUserImage] = useState({})
+   const [userImage, setUserImage] = useState('')
   const [image, setImage] = useState('')
 
   const handleSignOut = () => {
@@ -40,7 +41,6 @@ const ProfileComponent = ({user}) =>  {
   useEffect(() => {
     downloadImage(image)
   }, [image])
-
   const pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -92,7 +92,7 @@ const ProfileComponent = ({user}) =>  {
     });
     }
   }
-  const uploadImage = async ({imageName,uploadUri}) => {
+  const uploadImage = async (imageName,uploadUri) => {
     try {
       const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -108,15 +108,34 @@ const ProfileComponent = ({user}) =>  {
       xhr.send(null);
     });
         
-        storage.child(imageName).put(blob).then((result) => {
-          Toast.show("Uploaded image correctly!", {
+     await storage.child(imageName).put(blob).then((result) => {
+          
+      db.collection('userImage').doc().set({
+      task: inputValue,
+      completed: false,
+      idUser: user.uid
+      }).then((resp) => {
+        Toast.show("Uploaded image correctly!", {
         duration: Toast.durations.SHORT,
         position: Toast.positions.TOP,
         containerStyle: { marginTop: 50 },
       });
       setImage(imageName);
+      }).catch((error) => {
+          console.log(error);
+          Toast.show("An error has ocurred!", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+        });
+        })
         }).catch((error) => {
           console.log(error);
+          Toast.show("An error has ocurred!", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+      });
         })
     } catch (error) {
       console.log(error);
@@ -127,11 +146,11 @@ const ProfileComponent = ({user}) =>  {
       });
     }
 }
-  const downloadImage = async ({imageName}) => {
+  const downloadImage = async (imageName) => {
     console.log(imageName);
     storage.child(imageName).getDownloadURL().then((url) => {
-      // console.log(url);
-      // setUserImage(current => current.uri = url)
+      console.log(url);
+      setUserImage(url)
     }).catch((err) => {
       console.log(err);
     });
@@ -143,7 +162,7 @@ const ProfileComponent = ({user}) =>  {
      try {
        await db.collection('userImages').where("idUser", "==", user.uid).get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            setUserImage(doc.data())
+            setUserImage(doc.data()?.uri)
         });
 
     }).catch((err) => {
@@ -166,7 +185,7 @@ const ProfileComponent = ({user}) =>  {
 
     <InfoContainer>
       <TouchableOpacity onPress={() => modalizeRef.current?.open()}>
-        <AccountImage source={{ uri: userImage?.uri ? userImage.uri : "https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg"}} />
+        <AccountImage source={{ uri: userImage? userImage : "https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg"}} />
       </TouchableOpacity>
       <Header> {auth.currentUser?.email} </Header>
       <LogoutButton onPress={handleSignOut}>

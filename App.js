@@ -20,7 +20,7 @@ export default function App() {
         <Stack.Screen name="Login" options={{ headerShown: false }} >
           {() => <Login setUser={setUser} />}
         </Stack.Screen>
-        <Stack.Screen name="Registro" component={Registro} options={{ headerShown: false }} />
+        <Stack.Screen name="Registro" component={Registro} options={{ headerShown: false }} options={{ headerTitle: 'User Register', headerTintColor: 'darkorange' }} />
         <Stack.Screen name="Home" options={{ headerShown: false }}>
           {() => <TabsComponent user={user} />}
         </Stack.Screen>

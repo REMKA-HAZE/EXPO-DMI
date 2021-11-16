@@ -45,6 +45,9 @@ const Task = styled.Text`
     color: ${colors.black};
     padding: 20px ;
 `;
+
+
+
 const AddButtonContainer = styled.KeyboardAvoidingView`
     background-color: transparent;
     flex-direction: row;

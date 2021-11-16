@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-root-toast";
 import { Keyboard } from "react-native";
+import { List } from 'react-native-paper';
 import {
   Container,
   TaskList,
@@ -28,98 +29,98 @@ const Home = ({ user }) => {
 
     try {
       const newTask = await db.collection('tasks').add({
-      task: inputValue,
-      completed: false,
-      idUser: user.uid
-    })
-    Keyboard.dismiss();
+        task: inputValue,
+        completed: false,
+        idUser: user.uid
+      })
+      Keyboard.dismiss();
 
-    setInputValue("");
+      setInputValue("");
 
-    Toast.show("Task added!", {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      containerStyle: { marginTop: 50 },
-    });
+      Toast.show("Task added!", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+      });
     } catch (error) {
       console.error(error);
       Toast.show("An error has ocurred!", {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      containerStyle: { marginTop: 50 },
-    });
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+      });
     }
   }
 
   const deleteTask = async (e, id) => {
     e.preventDefault();
     try {
-    await db.collection('tasks').doc(id).delete();
+      await db.collection('tasks').doc(id).delete();
 
-    Toast.show("Task deleted!", {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      containerStyle: { marginTop: 50 },
-    });
+      Toast.show("Task deleted!", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+      });
     } catch (error) {
-       console.error(error);
+      console.error(error);
       Toast.show("An error has ocurred!", {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      containerStyle: { marginTop: 50 },
-    });
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+      });
     }
-    
+
   }
 
   const statusTask = async (e, task, estatus) => {
     e.preventDefault();
     try {
-       await db.collection('tasks').doc(task.id).set({
-      task: task.task,
-      completed: estatus,
-      idUser: task.idUser
-    });
-    Toast.show(estatus ? 'Task completed!' : 'Task uncompleted!', {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      containerStyle: { marginTop: 50 },
-    });
+      await db.collection('tasks').doc(task.id).set({
+        task: task.task,
+        completed: estatus,
+        idUser: task.idUser
+      });
+      Toast.show(estatus ? 'Task completed!' : 'Task uncompleted!', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+      });
 
     } catch (error) {
-       console.error(error);
+      console.error(error);
       Toast.show("An error has ocurred!", {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      containerStyle: { marginTop: 50 },
-    });
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+      });
     }
-   
+
   }
 
-  const getTasks =  async ()=> {
-     try {
-       await db.collection('tasks').onSnapshot(queryOnSnapshot => {
-      const tasks = queryOnSnapshot.docs.map(task => ({
-        id: task.id,
-        ...task.data()
-      }));
-      const tasksFiltered=  tasks.filter(task => task.idUser === user.uid);
+  const getTasks = async () => {
+    try {
+      await db.collection('tasks').onSnapshot(queryOnSnapshot => {
+        const tasks = queryOnSnapshot.docs.map(task => ({
+          id: task.id,
+          ...task.data()
+        }));
+        const tasksFiltered = tasks.filter(task => task.idUser === user.uid);
 
-      setTasks(tasksFiltered);
-    })
-     } catch (error) {
-        console.error(error);
+        setTasks(tasksFiltered);
+      })
+    } catch (error) {
+      console.error(error);
       Toast.show("An error has ocurred!", {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      containerStyle: { marginTop: 50 },
-    });
-     }
-     
-   }
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        containerStyle: { marginTop: 50 },
+      });
+    }
+
+  }
   useEffect(() => {
-   
+
     getTasks()
 
   }, [])
@@ -128,6 +129,33 @@ const Home = ({ user }) => {
   return (
     <>
       <Container>
+        {/* <Card >
+          <List.Section title="Task" style={{ width: 370, padding: 5 }}>
+            <List.Accordion
+              title="To Do">
+              <List.Item
+                data={tasks}
+                numColumns={1}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => {
+                  return (
+                    <Card>
+                      {item.task}
+                    </Card>
+                  )
+                }} />
+
+            </List.Accordion>
+            <List.Accordion
+              title="Did"
+            >
+              <List.Item title="First item" />
+
+            </List.Accordion>
+
+          </List.Section>
+        </Card> */}
+
         {tasks.length > 0 ? (
           <TaskList
             data={tasks}
@@ -153,7 +181,7 @@ const Home = ({ user }) => {
                       />
                     </TaskStatusButton>
                   )}
-                  <Task>{item.task}</Task>
+                  <Task style={{ textDecorationLine: item.completed ? 'line-through' : 'none' }} >{item.task}</Task>
                   <DeleteButton onPress={(e) => { deleteTask(e, item.id) }}>
                     <Ionicons name="trash" size={25} color={colors.red} />
                   </DeleteButton>

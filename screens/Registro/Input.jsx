@@ -1,22 +1,21 @@
 import React from 'react';
 import styled from 'styled-components/native';
+import { Colors } from 'react-native-paper';
 
 const Container = styled.View`
   
 
 `;
-const TextInput = styled.TextInput`
-  width: 100%;
-  height: 40px;
-  font-size: 18px;
-  color: #010101;
-  border-bottom-width:1px;
+const StyledInput = styled.TextInput`
+    background-color: ${Colors.white};
+    border-radius: 10px;
+    padding-right: 15px;
+    padding-left:15px;
+    padding-top: 10px;
+    margin-top: 10px;
+    height: auto;
 `;
-const InputContainer = ({placeholder, value}) => {
-  return (
-    <Container>
-      <TextInput placeholder={placeholder} value={value}  ></TextInput>
-    </Container>
-  );
-};
-export default InputContainer;
+
+
+
+export default StyledInput;

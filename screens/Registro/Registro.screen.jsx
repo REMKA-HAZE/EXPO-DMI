@@ -10,7 +10,7 @@ KeyboardAvoidingView,
 
   Platform
    } from 'react-native';
-import { auth } from "../../firebase";
+import { auth,db } from "../../firebase";
 import PressableButton from "./Button";
 
 
@@ -18,15 +18,36 @@ import PressableButton from "./Button";
 export const Registro = () =>{
    const [email, setEmail] = useState("");
    const [pwd, setPwd] = useState("");
+   const [name, setName] = useState("");
    const navigation = useNavigation();
    
    const handleSignup = () => {
-    auth.createUserWithEmailAndPassword(email, pwd).then((userCredentials) => {
+    if(!email || !name || !pwd){
+      alert('Fill the complete form first!')
+    } else {
+      auth.createUserWithEmailAndPassword(email, pwd).then((userCredentials) => {
        const user = userCredentials.user;
        console.log(user.email);
+       db.collection('userImages').add({
+         idUser: user.uid,
+         uri: ''
+       }).then((result) => {
+         console.log('ImageUser created')
+       }).catch((err) => {
+         alert('Error adding user default image')
+       });
+        db.collection('person').add({
+         idUser: user.uid,
+         fullName: name
+       }).then((result) => {
+         console.log('ImageUser created')
+       }).catch((err) => {
+         alert('Error adding user default image')
+       });
       }).catch((error) => {
        alert(error.message);
       });
+    }
   };
 
  return (
@@ -37,6 +58,12 @@ export const Registro = () =>{
       <View>
     
 
+        <TextInput
+          placeholder="Full name"
+          value={name}
+          onChangeText={(text) => setName(text)}
+          style={styles.input}
+        />
        <TextInput
           placeholder="Email"
           value={email}

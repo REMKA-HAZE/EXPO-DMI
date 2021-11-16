@@ -87,6 +87,8 @@ const Home = ({ user }) => {
       position: Toast.positions.TOP,
       containerStyle: { marginTop: 50 },
     });
+    getTasks()
+
     } catch (error) {
        console.error(error);
       Toast.show("An error has ocurred!", {

@@ -6,7 +6,7 @@ const ButtonContainer = styled.TouchableOpacity`
     border-radius:7px;
     margin-top: 10px;
     width: 350px;
-    height: 40px;
+    height: auto;
     padding: 10px;
     border: 2px darkorange ;
     background-color: ${props => props.bgColor};

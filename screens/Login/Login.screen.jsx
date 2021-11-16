@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import PressableButton from "../Registro/Button";
 
 export const Login = ({ setUser }) => {
@@ -23,6 +23,14 @@ export const Login = ({ setUser }) => {
     
       if (user) {
         setUser(user)
+      db.collection('userImages').where("idUser", "==", user.uid).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            console.log(doc.data())
+        })
+
+    }).catch((err) => {
+      console.log(err)
+    })
         // if there is a valid user we will replace the current screen for the Home one.
         navigation.replace("Home");
       }

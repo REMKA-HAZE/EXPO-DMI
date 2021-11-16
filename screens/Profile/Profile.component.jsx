@@ -10,7 +10,6 @@ import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-root-toast';
 
 const ProfileComponent = ({user}) =>  {
-  alert(user.uid)
  const modalizeRef = useRef(null);
    const navigation = useNavigation();
    const [userImage, setUserImage] = useState('')
@@ -109,26 +108,26 @@ const ProfileComponent = ({user}) =>  {
     });
         
      await storage.child(imageName).put(blob).then((result) => {
+       Toast.show("Uploaded image correctly!", {
+       duration: Toast.durations.SHORT,
+       position: Toast.positions.TOP,
+       containerStyle: { marginTop: 50 },
+     });
+     setImage(imageName);
           
-      db.collection('userImage').doc().set({
-      task: inputValue,
-      completed: false,
-      idUser: user.uid
-      }).then((resp) => {
-        Toast.show("Uploaded image correctly!", {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        containerStyle: { marginTop: 50 },
-      });
-      setImage(imageName);
-      }).catch((error) => {
-          console.log(error);
-          Toast.show("An error has ocurred!", {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        containerStyle: { marginTop: 50 },
-        });
-        })
+      // db.collection('userImage').doc().set({
+      // task: inputValue,
+      // completed: false,
+      // idUser: user.uid
+      // }).then((resp) => {
+      // }).catch((error) => {
+      //     console.log(error);
+      //     Toast.show("An error has ocurred!", {
+      //   duration: Toast.durations.SHORT,
+      //   position: Toast.positions.TOP,
+      //   containerStyle: { marginTop: 50 },
+      //   });
+      //   })
         }).catch((error) => {
           console.log(error);
           Toast.show("An error has ocurred!", {
@@ -163,6 +162,7 @@ const ProfileComponent = ({user}) =>  {
        await db.collection('userImages').where("idUser", "==", user.uid).get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             setUserImage(doc.data()?.uri)
+            console.log(doc)
         });
 
     }).catch((err) => {

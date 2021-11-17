@@ -9,9 +9,7 @@ const Container = styled.View`
 const StyledInput = styled.TextInput`
     background-color: ${Colors.white};
     border-radius: 10px;
-    padding-right: 15px;
-    padding-left:15px;
-    padding-top: 10px;
+    padding: 10px;
     margin-top: 10px;
     height: auto;
 `;
